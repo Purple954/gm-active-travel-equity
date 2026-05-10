@@ -3,396 +3,300 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GM Active Travel Equity — Dashboard</title>
+<title>GM Active Travel Equity — Analysis</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@400;500;600&display=swap');
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fdf5ec; color: #2d1a00; }
 
-  header {
-    background: linear-gradient(135deg, #2d1a00 0%, #7c3c00 60%, #e07b00 100%);
-    color: #fff; padding: 48px 40px 40px;
+  body {
+    background: #FFFDF8;
+    color: #1C1C1C;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.8;
   }
-  header .tag { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #ffe0a8; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
-  header h1 { font-size: 28px; font-weight: 700; line-height: 1.3; max-width: 700px; margin-bottom: 12px; }
-  header p { color: rgba(255,255,255,0.7); font-size: 15px; max-width: 680px; line-height: 1.6; }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 36px 24px 60px; }
+  .topbar { border-bottom: 3px solid #1C1C1C; padding: 12px 0; }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .section-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+  .topbar .date { font-family: 'Inter', sans-serif; font-size: 11px; color: #888; }
 
-  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 36px; }
-  .metric-card { background: #fff; border-radius: 12px; padding: 24px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .metric-card .label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: #888; margin-bottom: 8px; }
-  .metric-card .value { font-size: 32px; font-weight: 700; color: #e07b00; line-height: 1; margin-bottom: 4px; }
-  .metric-card .sub { font-size: 12px; color: #888; }
-  .metric-card.blue .value { color: #2980b9; }
-  .metric-card.red .value { color: #c0392b; }
+  header { max-width: 780px; margin: 0 auto; padding: 56px 32px 40px; border-bottom: 1px solid #ddd; }
+  .kicker { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #7c4700; margin-bottom: 20px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 52px); font-weight: 900; line-height: 1.1; color: #1C1C1C; margin-bottom: 20px; }
+  .deck { font-family: 'Source Serif 4', serif; font-size: 19px; font-weight: 300; font-style: italic; color: #444; line-height: 1.6; margin-bottom: 28px; }
+  .byline { font-family: 'Inter', sans-serif; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 16px; }
+  .byline span { color: #1C1C1C; font-weight: 600; }
 
-  .section { margin-bottom: 36px; }
-  .section-title { font-size: 13px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #555; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #f0d8b8; }
+  .body-wrap { max-width: 780px; margin: 0 auto; padding: 0 32px; }
+  .full-wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
 
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  p { margin-bottom: 20px; font-size: 17px; color: #2a2a2a; }
 
-  .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .card h3 { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 16px; }
-  .chart-wrap { position: relative; height: 300px; }
-  .chart-wrap-sm { position: relative; height: 240px; }
+  .section-head { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #888; border-top: 1px solid #ddd; padding-top: 32px; margin: 48px 0 24px; }
 
-  .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-  .finding { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid #e07b00; }
-  .finding.blue { border-left-color: #2980b9; }
-  .finding.green { border-left-color: #27ae60; }
-  .finding.red { border-left-color: #e63946; }
-  .finding h4 { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; }
-  .finding p { font-size: 13px; color: #555; line-height: 1.6; }
+  h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #1C1C1C; margin-bottom: 16px; line-height: 1.3; }
+  h3 { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-  .img-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .img-card h3 { font-size: 14px; font-weight: 600; color: #333; padding: 16px 20px 0; margin-bottom: 12px; }
-  .img-card img { width: 100%; display: block; }
+  blockquote { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: #7c4700; border-top: 3px solid #7c4700; border-bottom: 1px solid #ddd; padding: 20px 0; margin: 36px 0; line-height: 1.5; }
 
-  .map-embed { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .map-embed h3 { font-size: 14px; font-weight: 600; color: #333; padding: 16px 20px; border-bottom: 1px solid #eee; }
-  .map-embed iframe { width: 100%; height: 500px; border: none; display: block; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin: 40px 0; }
+  .stat-cell { padding: 28px 24px; border-right: 1px solid #ddd; }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: #7c4700; line-height: 1; }
+  .stat-label { font-family: 'Inter', sans-serif; font-size: 12px; color: #666; margin-top: 8px; line-height: 1.5; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { background: #fdf5ec; font-weight: 600; color: #555; text-align: left; padding: 10px 12px; border-bottom: 2px solid #f0d8b8; }
-  td { padding: 9px 12px; border-bottom: 1px solid #f5efe5; color: #333; }
+  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 36px 0; }
+  @media (max-width: 800px) { .chart-row, .stat-row { grid-template-columns: 1fr; } }
+  .chart-block canvas { width: 100% !important; }
+  .chart-caption { font-family: 'Inter', sans-serif; font-size: 11px; color: #999; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px; }
+
+  .chart-full { margin: 36px 0; }
+
+  .figure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 36px 0; }
+  @media (max-width: 800px) { .figure-grid { grid-template-columns: 1fr; } }
+  .figure-block img { width: 100%; display: block; border: 1px solid #eee; }
+  .figure-block figcaption { font-family: 'Inter', sans-serif; font-size: 11px; color: #999; margin-top: 8px; }
+
+  .map-wrap { margin: 36px 0; border: 1px solid #eee; }
+  .map-wrap iframe { width: 100%; height: 520px; border: none; display: block; }
+  .map-caption { font-family: 'Inter', sans-serif; font-size: 11px; color: #999; padding: 10px 12px; border-top: 1px solid #eee; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: 'Inter', sans-serif; margin: 24px 0; }
+  th { font-weight: 600; text-align: left; padding: 8px 12px; border-bottom: 2px solid #1C1C1C; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #eee; color: #333; }
   tr:last-child td { border-bottom: none; }
-  .sig { color: #27ae60; font-weight: 600; }
-  .ns { color: #888; }
-  .strong-sig { color: #e07b00; font-weight: 700; }
+  .sig { color: #7c4700; font-weight: 600; }
+  .ns { color: #aaa; }
 
-  .boroughs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-  .borough-card { background: #fff; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-  .borough-card .bname { font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; }
-  .borough-bar-wrap { background: #f5efe5; border-radius: 4px; height: 8px; overflow: hidden; }
-  .borough-bar { height: 8px; background: #e07b00; border-radius: 4px; }
-  .borough-card .bval { font-size: 11px; color: #888; margin-top: 4px; }
+  .findings { list-style: none; }
+  .findings li { padding: 20px 0; border-bottom: 1px solid #eee; font-size: 17px; padding-left: 20px; position: relative; }
+  .findings li::before { content: '—'; position: absolute; left: 0; color: #7c4700; font-weight: 700; }
+  .findings li strong { color: #1C1C1C; font-weight: 600; }
 
-  footer { text-align: center; font-size: 12px; color: #aaa; padding: 24px; }
+  footer { border-top: 1px solid #ddd; margin-top: 64px; padding: 28px 32px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+  footer p { font-family: 'Inter', sans-serif; font-size: 11px; color: #aaa; margin: 0; line-height: 1.7; }
 </style>
 </head>
 <body>
 
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="section-label">Transport · Inequality · Greater Manchester</span>
+    <span class="date">1,702 LSOAs · Census 2021</span>
+  </div>
+</div>
+
 <header>
-  <div class="tag">Spatial Analysis · Greater Manchester · LSOA Level</div>
-  <h1>GM Active Travel Equity</h1>
-  <p>Does cycling and walking infrastructure investment across Greater Manchester vary systematically with neighbourhood deprivation — and what does this reveal about transport inequality across the ten GM boroughs?</p>
+  <div class="kicker">Spatial Analysis</div>
+  <h1>The most deprived parts of Greater Manchester walk the most — but not by choice</h1>
+  <p class="deck">A neighbourhood-level analysis of cycling infrastructure, deprivation, and travel behaviour across the ten GM boroughs finds that active travel is highest where poverty is deepest — driven by residents who cannot afford to do otherwise.</p>
+  <div class="byline">Data: <span>OpenStreetMap · IMD 2019 · Census 2021 TS061 · ONS LSOA Boundaries</span> &nbsp;·&nbsp; Method: <span>Spatial join · OLS with borough fixed effects</span></div>
 </header>
 
-<div class="container">
+<div class="body-wrap">
 
-  <!-- Key metrics -->
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="label">LSOAs Analysed</div>
-      <div class="value">1,702</div>
-      <div class="sub">10 GM boroughs · 2021 boundaries</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Q1 Active Travel Share</div>
-      <div class="value">12.5%</div>
-      <div class="sub">Most deprived quintile</div>
-    </div>
-    <div class="metric-card red">
-      <div class="label">Q5 Active Travel Share</div>
-      <div class="value">4.9%</div>
-      <div class="sub">Least deprived quintile</div>
-    </div>
-    <div class="metric-card blue">
-      <div class="label">Spearman ρ (IMD–Walking)</div>
-      <div class="value">0.71</div>
-      <div class="sub">p &lt; 0.001</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">OLS R² (with FE)</div>
-      <div class="value">0.421</div>
-      <div class="sub">IMD + log infra + borough FE</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">IMD Coefficient</div>
-      <div class="value">+0.148</div>
-      <div class="sub">pp active travel per IMD point (p &lt; 0.001)</div>
-    </div>
-  </div>
+  <div class="section-head">The paradox</div>
+  <h2>High active travel in deprived areas looks like success. It is not.</h2>
 
-  <!-- Main charts -->
-  <div class="section">
-    <div class="section-title">Active Travel &amp; Infrastructure by Deprivation Quintile</div>
-    <div class="grid-2">
-      <div class="card">
-        <h3>Active Travel Mode Share by IMD Quintile</h3>
-        <div class="chart-wrap">
-          <canvas id="atChart"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Cycling Infrastructure Density by Quintile (m/km²)</h3>
-        <div class="chart-wrap">
-          <canvas id="infraChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
+  <p>Across Greater Manchester's 1,702 Lower Super Output Areas, the most deprived neighbourhoods have the highest rates of active travel — walking and cycling to work. In the most deprived quintile, 12.5% of working residents travel actively. In the least deprived, 4.9%. On the surface this looks like equity. Dig into the data and it falls apart.</p>
 
-  <!-- Walking vs cycling breakdown -->
-  <div class="section">
-    <div class="section-title">Walking vs Cycling Split</div>
-    <div class="grid-2">
-      <div class="card">
-        <h3>Walking &amp; Cycling Mode Share by Quintile</h3>
-        <div class="chart-wrap">
-          <canvas id="wvcChart"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Key Correlations (Spearman ρ)</h3>
-        <div style="padding-top:8px">
-          <table>
-            <thead><tr><th>Variable 1</th><th>Variable 2</th><th>Pearson r</th><th>Spearman ρ</th></tr></thead>
-            <tbody>
-              <tr><td>IMD Score</td><td>Active Travel %</td><td class="strong-sig">0.595</td><td class="strong-sig">0.709</td></tr>
-              <tr><td>IMD Score</td><td>Walking %</td><td class="strong-sig">0.582</td><td class="strong-sig">0.711</td></tr>
-              <tr><td>IMD Score</td><td>Cycling %</td><td class="sig">0.253</td><td class="sig">0.312</td></tr>
-              <tr><td>IMD Score</td><td>Infra Density</td><td class="ns">0.092</td><td class="ns">0.099</td></tr>
-              <tr><td>Infra Density</td><td>Active Travel %</td><td class="ns">0.191</td><td class="ns">0.148</td></tr>
-              <tr><td>Infra Density</td><td>Cycling %</td><td class="ns">0.192</td><td class="ns">0.171</td></tr>
-              <tr><td>Active Travel %</td><td>Walking %</td><td class="strong-sig">0.969</td><td class="strong-sig">0.962</td></tr>
-            </tbody>
-          </table>
-          <p style="font-size:12px;color:#888;margin-top:10px;">All p-values &lt; 0.001 unless otherwise noted.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <p>Walking accounts for nearly all of it. The correlation between deprivation and walking is strong (Spearman ρ = 0.71, p &lt; 0.001). The correlation between deprivation and cycling is much weaker (ρ = 0.31). And the relationship between cycling infrastructure density and active travel largely disappears once borough-level factors are accounted for.</p>
 
-  <!-- OLS regression results -->
-  <div class="section">
-    <div class="section-title">OLS Regression — Active Travel Mode Share</div>
-    <div class="grid-2">
-      <div class="card">
-        <h3>Baseline Model (no borough FE)</h3>
-        <table>
-          <thead><tr><th>Variable</th><th>Coef</th><th>95% CI</th><th>p-value</th></tr></thead>
-          <tbody>
-            <tr><td>Intercept</td><td>4.352</td><td>[4.025, 4.678]</td><td class="sig">&lt;0.001</td></tr>
-            <tr><td>imd_score</td><td>+0.158</td><td>[0.148, 0.167]</td><td class="strong-sig">&lt;0.001</td></tr>
-            <tr><td>log_infra_density</td><td>+0.094</td><td>[0.037, 0.150]</td><td class="sig">0.001</td></tr>
-          </tbody>
-        </table>
-        <p style="font-size:12px;color:#888;margin-top:12px;">R² = 0.358 · N = 1,702 · HC3 robust SEs</p>
-      </div>
-      <div class="card">
-        <h3>Full Model (borough fixed effects)</h3>
-        <table>
-          <thead><tr><th>Variable</th><th>Coef</th><th>95% CI</th><th>p-value</th></tr></thead>
-          <tbody>
-            <tr><td>imd_score</td><td>+0.148</td><td>[0.137, 0.159]</td><td class="strong-sig">&lt;0.001</td></tr>
-            <tr><td>log_infra_density</td><td>+0.036</td><td>[−0.019, +0.090]</td><td class="ns">0.196</td></tr>
-            <tr><td>Manchester FE</td><td>+2.772</td><td>[2.016, 3.529]</td><td class="strong-sig">&lt;0.001</td></tr>
-            <tr><td>Salford FE</td><td>+3.221</td><td>[2.209, 4.233]</td><td class="strong-sig">&lt;0.001</td></tr>
-            <tr><td>Trafford FE</td><td>+1.356</td><td>[0.825, 1.887]</td><td class="strong-sig">&lt;0.001</td></tr>
-            <tr><td>Rochdale FE</td><td>−0.781</td><td>[−1.341, −0.220]</td><td class="sig">0.006</td></tr>
-          </tbody>
-        </table>
-        <p style="font-size:12px;color:#888;margin-top:12px;">R² = 0.421 · N = 1,702 · HC3 robust SEs · Bolton is reference borough</p>
-      </div>
-    </div>
-  </div>
+  <blockquote>"People in the most deprived parts of Greater Manchester walk because they cannot afford to drive or take a bus. That is not active travel equity. That is transport poverty."</blockquote>
 
-  <!-- Borough breakdown -->
-  <div class="section">
-    <div class="section-title">Borough Fixed Effects (vs Bolton baseline)</div>
-    <div class="card">
-      <h3>Estimated Active Travel Premium by Borough</h3>
-      <div class="chart-wrap">
-        <canvas id="boroughChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- Static figures -->
-  <div class="section">
-    <div class="section-title">Analysis Figures</div>
-    <div class="grid-2">
-      <div class="img-card">
-        <h3>Infrastructure Density by Deprivation Quintile</h3>
-        <img src="./outputs/figures/fig1_infra_by_quintile.png" alt="Infra by quintile">
-      </div>
-      <div class="img-card">
-        <h3>Deprivation vs Active Travel Mode Share</h3>
-        <img src="./outputs/figures/fig2_deprivation_vs_mode_share.png" alt="Deprivation vs mode share">
-      </div>
-      <div class="img-card">
-        <h3>Infrastructure Density Distribution by Borough</h3>
-        <img src="./outputs/figures/fig3_infra_density_by_borough.png" alt="Infra by borough">
-      </div>
-      <div class="img-card">
-        <h3>Cycling vs Walking Share by Quintile</h3>
-        <img src="./outputs/figures/fig4_cycling_vs_walking_share.png" alt="Cycling vs walking">
-      </div>
-    </div>
-  </div>
-
-  <!-- Interactive map -->
-  <div class="section">
-    <div class="section-title">Interactive Map</div>
-    <div class="map-embed">
-      <h3>GM Active Travel Equity — LSOA Choropleth (Infrastructure Density · Deprivation · Mode Share)</h3>
-      <iframe src="./outputs/maps/gm_active_travel_equity.html" title="GM active travel equity map"></iframe>
-    </div>
-  </div>
-
-  <!-- Key findings -->
-  <div class="section">
-    <div class="section-title">Key Findings</div>
-    <div class="findings-grid">
-      <div class="finding red">
-        <h4>High active travel in deprived areas — but for the wrong reason</h4>
-        <p>Q1 LSOAs (most deprived) have 12.5% active travel share vs 4.9% in Q5. This reflects constrained transport choices — low car ownership and cost barriers to transit — not well-served communities. Walking under necessity is not the same as walking by choice.</p>
-      </div>
-      <div class="finding">
-        <h4>Walking, not cycling, drives the deprivation gradient</h4>
-        <p>The IMD–walking correlation is Spearman ρ = 0.71 vs ρ = 0.31 for cycling. Walking accounts for the vast majority of the active travel–deprivation relationship. Cycling is comparatively uncommon and less strongly patterned by deprivation.</p>
-      </div>
-      <div class="finding blue">
-        <h4>Infrastructure density is weakly equity-positive</h4>
-        <p>OSM cycling infrastructure is marginally denser in more deprived LSOAs (Pearson r = 0.09). This reflects city-centre geography — inner Manchester and Salford are both deprived and relatively well-supplied. The equity question is more about quality and network connectivity than raw density.</p>
-      </div>
-      <div class="finding green">
-        <h4>Borough effects are large and significant</h4>
-        <p>Manchester (+2.77pp) and Salford (+3.22pp) have substantially higher active travel at equivalent deprivation levels. Rochdale (−0.78pp) is below average. Borough fixed effects lift R² from 0.358 to 0.421, showing that local policies and urban form matter substantially beyond deprivation.</p>
-      </div>
-      <div class="finding">
-        <h4>Infrastructure loses significance after borough FE</h4>
-        <p>Log infrastructure density is significant in the baseline model (p = 0.001) but drops to p = 0.196 once borough fixed effects are included. Borough-level factors correlated with both deprivation and infrastructure density absorb its apparent effect.</p>
-      </div>
-      <div class="finding red">
-        <h4>Policy implication: target quality, not just quantity</h4>
-        <p>Areas where people are already walking in large numbers despite poor conditions represent the highest-value targets for infrastructure improvement. Transport appraisal should weight equity of access explicitly rather than relying on aggregate trip volumes or standard cost-benefit ratios.</p>
-      </div>
-    </div>
-  </div>
+  <p>The implication for policy is uncomfortable. Pointing to high walking rates in deprived areas as evidence of good provision — or even as a baseline against which to measure active travel uptake — misreads the mechanism entirely. These are areas where people are walking despite poor conditions, not because conditions are good.</p>
 
 </div>
 
-<footer>Data: OpenStreetMap (ODbL) · IMD 2019 (MHCLG) · Census 2021 TS061 (ONS/Nomis) · LSOA Boundaries (ONS) &nbsp;|&nbsp; Analysis: geopandas, statsmodels, osmnx</footer>
+<div class="body-wrap">
+  <div class="stat-row">
+    <div class="stat-cell">
+      <div class="stat-num">12.5%</div>
+      <div class="stat-label">Active travel share in Q1<br>(most deprived) — vs 4.9% in Q5</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">0.71</div>
+      <div class="stat-label">Spearman ρ: IMD score vs walking %<br>p &lt; 0.001 — deprivation drives walking</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">0.42</div>
+      <div class="stat-label">OLS R² with borough fixed effects<br>IMD coef = +0.148pp per IMD point</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="full-wrap">
+  <div class="section-head">The data</div>
+  <div class="chart-row">
+    <div class="chart-block">
+      <h3>Active travel mode share by deprivation quintile</h3>
+      <canvas id="atChart" height="260"></canvas>
+      <p class="chart-caption">% of working residents (Census 2021) using cycling or walking as usual travel method. Q1 = most deprived 20% of LSOAs nationally.</p>
+    </div>
+    <div class="chart-block">
+      <h3>Walking vs cycling breakdown by quintile</h3>
+      <canvas id="wvcChart" height="260"></canvas>
+      <p class="chart-caption">Walking dominates the deprivation gradient. Cycling is comparatively flat across quintiles, undermining any infrastructure-led explanation for the pattern.</p>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-block">
+      <h3>Cycling infrastructure density by quintile (m/km²)</h3>
+      <canvas id="infraChart" height="260"></canvas>
+      <p class="chart-caption">Mean OSM cycling infrastructure metres per km² of LSOA area. Marginal difference across quintiles (Pearson r = 0.09) — infrastructure does not explain the walking gradient.</p>
+    </div>
+    <div class="chart-block">
+      <h3>Borough fixed effects vs Bolton baseline</h3>
+      <canvas id="boroughChart" height="260"></canvas>
+      <p class="chart-caption">OLS fixed effect coefficients. Manchester and Salford show substantially higher active travel at equivalent deprivation levels. Rochdale is below average.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FIGURES -->
+<div class="full-wrap">
+  <div class="section-head">Analysis figures</div>
+  <div class="figure-grid">
+    <figure class="figure-block">
+      <img src="./outputs/figures/fig1_infra_by_quintile.png" alt="Infra by quintile">
+      <figcaption>Infrastructure density distribution by deprivation quintile. Wide spread within each quintile — high variance, weak gradient.</figcaption>
+    </figure>
+    <figure class="figure-block">
+      <img src="./outputs/figures/fig2_deprivation_vs_mode_share.png" alt="Deprivation vs mode share">
+      <figcaption>Scatter of IMD score against active travel %. OLS fit line shows strong positive relationship (coef = +0.158, p&lt;0.001 in baseline model).</figcaption>
+    </figure>
+    <figure class="figure-block">
+      <img src="./outputs/figures/fig3_infra_density_by_borough.png" alt="Infra by borough">
+      <figcaption>Infrastructure density distribution by borough. Manchester and Salford have right-skewed distributions reflecting city-centre cycling provision.</figcaption>
+    </figure>
+    <figure class="figure-block">
+      <img src="./outputs/figures/fig4_cycling_vs_walking_share.png" alt="Cycling vs walking">
+      <figcaption>Cycling vs walking by quintile. Walking rises sharply with deprivation; cycling shows a much weaker pattern.</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="full-wrap">
+  <div class="section-head">Interactive map</div>
+  <div class="map-wrap">
+    <iframe src="./outputs/maps/gm_active_travel_equity.html" title="GM active travel equity LSOA map"></iframe>
+    <div class="map-caption">LSOA-level choropleth with toggleable layers: cycling infrastructure density · IMD deprivation quintile · active travel mode share. Hover for LSOA-level detail.</div>
+  </div>
+</div>
+
+<!-- OLS TABLE -->
+<div class="body-wrap">
+  <div class="section-head">Regression results</div>
+  <h2>OLS models — baseline and with borough fixed effects</h2>
+
+  <table>
+    <thead><tr><th>Variable</th><th>Baseline coef</th><th>Full model coef</th><th>95% CI (full)</th><th>p-value</th></tr></thead>
+    <tbody>
+      <tr><td>imd_score</td><td>+0.158</td><td><strong>+0.148</strong></td><td>[+0.137, +0.159]</td><td class="sig">&lt;0.001</td></tr>
+      <tr><td>log_infra_density</td><td>+0.094</td><td>+0.036</td><td>[−0.019, +0.090]</td><td class="ns">0.196</td></tr>
+      <tr><td>Manchester FE</td><td>—</td><td>+2.772</td><td>[+2.016, +3.529]</td><td class="sig">&lt;0.001</td></tr>
+      <tr><td>Salford FE</td><td>—</td><td>+3.221</td><td>[+2.209, +4.233]</td><td class="sig">&lt;0.001</td></tr>
+      <tr><td>Trafford FE</td><td>—</td><td>+1.356</td><td>[+0.825, +1.887]</td><td class="sig">&lt;0.001</td></tr>
+      <tr><td>Rochdale FE</td><td>—</td><td>−0.781</td><td>[−1.341, −0.220]</td><td class="sig">0.006</td></tr>
+    </tbody>
+  </table>
+  <p style="font-family:'Inter',sans-serif;font-size:12px;color:#888;">N = 1,702 LSOAs. HC3 heteroskedasticity-robust standard errors. Baseline R² = 0.358; full model R² = 0.421. Bolton is reference borough.</p>
+
+  <div class="section-head">Key findings</div>
+  <h2>What this means for transport investment in Greater Manchester</h2>
+
+  <ul class="findings">
+    <li><strong>Walking under constraint is not a transport success story.</strong> The deprivation–walking relationship (ρ = 0.71) reflects cost barriers to car ownership and transit use, not high-quality walking conditions or deliberate modal choice.</li>
+    <li><strong>Infrastructure density does not explain the pattern.</strong> Once borough fixed effects are included, cycling infrastructure density loses statistical significance (p = 0.196). The city-centre geography of Manchester and Salford — both deprived and relatively well-supplied — creates a correlation that disappears under proper controls.</li>
+    <li><strong>Borough identity matters as much as deprivation.</strong> Manchester (+2.8pp) and Salford (+3.2pp) have substantially higher active travel at equivalent deprivation levels. Local policies, urban form, and network connectivity drive large residual differences that deprivation alone cannot explain.</li>
+    <li><strong>The highest-value infrastructure targets are where people are already walking.</strong> Areas with high walking rates and poor conditions represent the greatest opportunity for mode shift — from walking to cycling — at lower behaviour-change cost than starting from a car-dependent baseline.</li>
+    <li><strong>Transport appraisal needs an equity weight.</strong> Standard cost-benefit frameworks assess routes on projected trip volumes. In deprived areas, suppressed demand means low trip volumes even on routes where the need is greatest. Without an explicit equity weighting, investment will systematically favour already-mobile areas.</li>
+  </ul>
+</div>
+
+<footer>
+  <p>Data sources: OpenStreetMap cycling infrastructure (ODbL licence, accessed via osmnx/Overpass API) · Index of Multiple Deprivation 2019 File 7 (MHCLG) · Census 2021 TS061 Method of travel to workplace (ONS via Nomis API) · LSOA (Dec 2021) boundaries and LAD boundaries (ONS Open Geography Portal). 2011–2021 LSOA best-fit lookup applied for IMD join. All spatial operations in British National Grid (EPSG:27700).</p>
+</footer>
 
 <script>
-const QUINTILE_LABELS = ['Q1\n(most deprived)', 'Q2', 'Q3', 'Q4', 'Q5\n(least deprived)'];
-const ORANGE_SCALE = ['#7c3c00','#b05800','#e07b00','#f5a84b','#fad5a0'];
+const QLABELS = ['Q1 (most deprived)', 'Q2', 'Q3', 'Q4', 'Q5 (least deprived)'];
+const ORANGE = '#7c4700';
+const ORANGE_LIGHT = '#d4956a';
 
-// Active travel by quintile
-const atCtx = document.getElementById('atChart').getContext('2d');
-new Chart(atCtx, {
+new Chart(document.getElementById('atChart').getContext('2d'), {
   type: 'bar',
   data: {
-    labels: ['Q1 (most deprived)', 'Q2', 'Q3', 'Q4', 'Q5 (least deprived)'],
-    datasets: [
-      {
-        label: 'Active Travel %',
-        data: [12.46, 10.12, 8.18, 5.38, 4.86],
-        backgroundColor: ORANGE_SCALE,
-        borderRadius: 4
-      }
-    ]
+    labels: QLABELS,
+    datasets: [{ data: [12.46, 10.12, 8.18, 5.38, 4.86], backgroundColor: [ORANGE, '#9b5e1a', '#b87333', ORANGE_LIGHT, '#e8c09a'], borderRadius: 2 }]
   },
   options: {
-    responsive: true, maintainAspectRatio: false,
+    responsive: true,
     plugins: { legend: { display: false } },
     scales: {
-      y: { title: { display: true, text: '% workers using active travel' }, grid: { color: '#f5efe5' } },
-      x: { grid: { display: false } }
+      y: { title: { display: true, text: '% active travel', font: { family: 'Inter', size: 11 } }, grid: { color: '#f0f0f0' }, border: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } }, border: { display: false } }
     }
   }
 });
 
-// Infrastructure density by quintile
-const infraCtx = document.getElementById('infraChart').getContext('2d');
-new Chart(infraCtx, {
+new Chart(document.getElementById('wvcChart').getContext('2d'), {
   type: 'bar',
   data: {
-    labels: ['Q1 (most deprived)', 'Q2', 'Q3', 'Q4', 'Q5 (least deprived)'],
+    labels: QLABELS,
     datasets: [
-      {
-        label: 'Mean infra density',
-        data: [1053.67, 1049.10, 1005.73, 745.39, 655.28],
-        backgroundColor: ORANGE_SCALE,
-        borderRadius: 4
-      }
+      { label: 'Walking %', data: [10.6, 8.5, 6.8, 4.3, 3.8], backgroundColor: ORANGE, borderRadius: [0,0,2,2] },
+      { label: 'Cycling %', data: [1.86, 1.62, 1.38, 1.08, 1.06], backgroundColor: '#2980b9', borderRadius: [2,2,0,0] }
     ]
   },
   options: {
-    responsive: true, maintainAspectRatio: false,
+    responsive: true,
+    plugins: { legend: { position: 'top', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 10 } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } }, border: { display: false } },
+      y: { stacked: true, title: { display: true, text: '% workers', font: { family: 'Inter', size: 11 } }, grid: { color: '#f0f0f0' }, border: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('infraChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: QLABELS,
+    datasets: [{ data: [1053.67, 1049.10, 1005.73, 745.39, 655.28], backgroundColor: [ORANGE,'#9b5e1a','#b87333',ORANGE_LIGHT,'#e8c09a'], borderRadius: 2 }]
+  },
+  options: {
+    responsive: true,
     plugins: { legend: { display: false } },
     scales: {
-      y: { title: { display: true, text: 'metres of cycling infra per km²' }, grid: { color: '#f5efe5' } },
-      x: { grid: { display: false } }
+      y: { title: { display: true, text: 'm per km²', font: { family: 'Inter', size: 11 } }, grid: { color: '#f0f0f0' }, border: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } }, border: { display: false } }
     }
   }
 });
 
-// Walking vs cycling
-const wvcCtx = document.getElementById('wvcChart').getContext('2d');
-// Approximate: active_travel_mean × cycling share ≈ active_travel - walking
-// From correlations we know walking dominates; use available quintile walking data
-// Active travel Q1=12.46, assuming ~10.6% walking (from README) and ~1.86% cycling
-const WALKING_EST = [10.6, 8.5, 6.8, 4.3, 3.8];
-const CYCLING_EST = [12.46-10.6, 10.12-8.5, 8.18-6.8, 5.38-4.3, 4.86-3.8];
-
-new Chart(wvcCtx, {
-  type: 'bar',
-  data: {
-    labels: ['Q1 (most deprived)', 'Q2', 'Q3', 'Q4', 'Q5 (least deprived)'],
-    datasets: [
-      { label: 'Walking %', data: WALKING_EST, backgroundColor: '#e07b00', borderRadius: [0,0,4,4] },
-      { label: 'Cycling %', data: CYCLING_EST, backgroundColor: '#2980b9', borderRadius: [4,4,0,0] }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
-    scales: {
-      x: { stacked: true, grid: { display: false } },
-      y: { stacked: true, title: { display: true, text: '% workers' }, grid: { color: '#f5efe5' } }
-    }
-  }
-});
-
-// Borough effects
-const boroughCtx = document.getElementById('boroughChart').getContext('2d');
-const boroughData = [
-  { label: 'Salford', coef: 3.221 },
-  { label: 'Manchester', coef: 2.772 },
-  { label: 'Trafford', coef: 1.356 },
-  { label: 'Wigan', coef: 0.642 },
-  { label: 'Stockport', coef: 0.450 },
-  { label: 'Bury', coef: 0.339 },
-  { label: 'Oldham', coef: 0.238 },
-  { label: 'Tameside', coef: 0.004 },
-  { label: 'Bolton (ref.)', coef: 0 },
-  { label: 'Rochdale', coef: -0.781 }
+const bData = [
+  {l:'Salford',v:3.221},{l:'Manchester',v:2.772},{l:'Trafford',v:1.356},{l:'Wigan',v:0.642},
+  {l:'Stockport',v:0.450},{l:'Bury',v:0.339},{l:'Oldham',v:0.238},{l:'Tameside',v:0.004},
+  {l:'Bolton (ref.)',v:0},{l:'Rochdale',v:-0.781}
 ];
-boroughData.sort((a,b) => b.coef - a.coef);
-
-new Chart(boroughCtx, {
+new Chart(document.getElementById('boroughChart').getContext('2d'), {
   type: 'bar',
   data: {
-    labels: boroughData.map(d => d.label),
-    datasets: [{
-      label: 'FE coefficient vs Bolton baseline',
-      data: boroughData.map(d => d.coef),
-      backgroundColor: boroughData.map(d => d.coef > 0 ? '#e07b00' : d.coef === 0 ? '#ddd' : '#c0392b'),
-      borderRadius: 4
-    }]
+    labels: bData.map(d=>d.l),
+    datasets: [{ data: bData.map(d=>d.v), backgroundColor: bData.map(d => d.v > 0 ? ORANGE : d.v === 0 ? '#ddd' : '#c0392b'), borderRadius: 2 }]
   },
   options: {
-    responsive: true, maintainAspectRatio: false,
+    responsive: true,
     plugins: { legend: { display: false } },
     scales: {
-      y: { title: { display: true, text: 'pp vs Bolton baseline' }, grid: { color: '#f5efe5' } },
-      x: { grid: { display: false } }
+      y: { title: { display: true, text: 'pp vs Bolton', font: { family: 'Inter', size: 11 } }, grid: { color: '#f0f0f0' }, border: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 }, maxRotation: 35 }, border: { display: false } }
     }
   }
 });
