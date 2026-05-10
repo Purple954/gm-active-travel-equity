@@ -1,0 +1,6 @@
+imd_quintile,n,infra_density_mean,infra_density_median,infra_density_sd,active_travel_mean,active_travel_median,active_travel_sd,imd_score_mean,imd_quintile_label
+1,651,1053.67,397.37,1454.41,12.46,11.88,4.36,49.2,Q1 (most deprived)
+2,352,1049.1,379.66,1597.74,10.12,9.07,4.52,27.36,Q2
+3,243,1005.73,345.16,1538.64,8.18,7.56,4.1,17.99,Q3
+4,248,745.39,232.23,1096.53,5.38,4.95,2.26,11.26,Q4
+5,208,655.28,69.09,1084.59,4.86,4.61,2.04,6.13,Q5 (least deprived)

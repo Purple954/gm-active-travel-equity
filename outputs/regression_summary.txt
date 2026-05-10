@@ -1,0 +1,89 @@
+========================================================================
+GM ACTIVE TRAVEL EQUITY - OLS REGRESSION SUMMARY
+========================================================================
+
+DEPENDENT VARIABLE: Active travel mode share (% of workers)
+
+-- BASELINE MODEL (no borough fixed effects) --
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:      active_travel_pct   R-squared:                       0.358
+Model:                            OLS   Adj. R-squared:                  0.357
+Method:                 Least Squares   F-statistic:                     576.4
+Date:                Fri, 24 Apr 2026   Prob (F-statistic):          8.62e-192
+Time:                        15:19:54   Log-Likelihood:                -4738.6
+No. Observations:                1702   AIC:                             9483.
+Df Residuals:                    1699   BIC:                             9499.
+Df Model:                           2                                         
+Covariance Type:                  HC3                                         
+=====================================================================================
+                        coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+Intercept             4.3518      0.167     26.125      0.000       4.025       4.678
+imd_score             0.1579      0.005     32.152      0.000       0.148       0.167
+log_infra_density     0.0936      0.029      3.254      0.001       0.037       0.150
+==============================================================================
+Omnibus:                      809.809   Durbin-Watson:                   0.989
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             6809.078
+Skew:                           2.046   Prob(JB):                         0.00
+Kurtosis:                      11.904   Cond. No.                         77.9
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+-- FULL MODEL (borough fixed effects, HC3 SEs) --
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:      active_travel_pct   R-squared:                       0.421
+Model:                            OLS   Adj. R-squared:                  0.417
+Method:                 Least Squares   F-statistic:                     108.4
+Date:                Fri, 24 Apr 2026   Prob (F-statistic):          6.87e-187
+Time:                        15:19:54   Log-Likelihood:                -4650.3
+No. Observations:                1702   AIC:                             9325.
+Df Residuals:                    1690   BIC:                             9390.
+Df Model:                          11                                         
+Covariance Type:                  HC3                                         
+============================================================================================
+                               coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------
+Intercept                    3.8971      0.255     15.261      0.000       3.397       4.398
+C(borough)[T.Bury]           0.3392      0.354      0.959      0.338      -0.354       1.033
+C(borough)[T.Manchester]     2.7724      0.386      7.182      0.000       2.016       3.529
+C(borough)[T.Oldham]         0.2381      0.278      0.856      0.392      -0.307       0.783
+C(borough)[T.Rochdale]      -0.7807      0.286     -2.729      0.006      -1.341      -0.220
+C(borough)[T.Salford]        3.2214      0.516      6.239      0.000       2.209       4.233
+C(borough)[T.Stockport]      0.4500      0.262      1.715      0.086      -0.064       0.964
+C(borough)[T.Tameside]       0.0043      0.303      0.014      0.989      -0.589       0.597
+C(borough)[T.Trafford]       1.3564      0.271      5.007      0.000       0.825       1.887
+C(borough)[T.Wigan]          0.6424      0.324      1.980      0.048       0.007       1.278
+imd_score                    0.1477      0.006     26.156      0.000       0.137       0.159
+log_infra_density            0.0358      0.028      1.293      0.196      -0.018       0.090
+==============================================================================
+Omnibus:                      675.821   Durbin-Watson:                   1.066
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             4950.749
+Skew:                           1.680   Prob(JB):                         0.00
+Kurtosis:                      10.650   Cond. No.                         360.
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+-- KEY COEFFICIENTS --
+  imd_score                       coef=+0.1477  95% CI [+0.1366, +0.1588]  p=0.0000
+  log_infra_density               coef=+0.0358  95% CI [-0.0185, +0.0901]  p=0.1959
+
+-- MODEL FIT --
+  R2           : 0.4210
+  Adj. R2      : 0.4173
+  F-statistic  : 108.38  (p=6.8679e-187)
+  N            : 1702
+
+-- DIAGNOSTICS --
+  Breusch-Pagan (LM): stat=116.8625  p=0.0
+  Durbin-Watson      : 1.0657
+  VIF:
+    imd_score                       1.19
+    log_infra_density               1.05
+
+========================================================================

@@ -1,0 +1,35 @@
+# Raw data — not committed; see README for download instructions
+data/raw/
+
+# OSM API response cache — regenerated automatically by ingest.py
+cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Outputs generated at runtime (optional — remove these lines if you want to commit outputs)
+# outputs/figures/
+# outputs/maps/
