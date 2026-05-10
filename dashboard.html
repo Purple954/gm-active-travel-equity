@@ -91,8 +91,8 @@
 
 <header>
   <div class="kicker">Spatial Analysis</div>
-  <h1>The most deprived parts of Greater Manchester walk the most — but not by choice</h1>
-  <p class="deck">A neighbourhood-level analysis of cycling infrastructure, deprivation, and travel behaviour across the ten GM boroughs finds that active travel is highest where poverty is deepest — driven by residents who cannot afford to do otherwise.</p>
+  <h1>The most deprived parts of Greater Manchester walk the most, but walking here is a symptom of poverty</h1>
+  <p class="deck">A neighbourhood-level analysis of cycling infrastructure, deprivation, and travel behaviour across the ten GM boroughs finds that active travel is highest where poverty is deepest, driven by residents who cannot afford to do otherwise.</p>
   <div class="byline">Data: <span>OpenStreetMap · IMD 2019 · Census 2021 TS061 · ONS LSOA Boundaries</span> &nbsp;·&nbsp; Method: <span>Spatial join · OLS with borough fixed effects</span></div>
 </header>
 
@@ -101,13 +101,13 @@
   <div class="section-head">The paradox</div>
   <h2>High active travel in deprived areas looks like success. It is not.</h2>
 
-  <p>Across Greater Manchester's 1,702 Lower Super Output Areas, the most deprived neighbourhoods have the highest rates of active travel — walking and cycling to work. In the most deprived quintile, 12.5% of working residents travel actively. In the least deprived, 4.9%. On the surface this looks like equity. Dig into the data and it falls apart.</p>
+  <p>Across Greater Manchester's 1,702 Lower Super Output Areas, the most deprived neighbourhoods have the highest rates of active travel. In the most deprived quintile, 12.5% of working residents travel actively. In the least deprived, 4.9%. On the surface this looks like equity. The data tells a different story.</p>
 
   <p>Walking accounts for nearly all of it. The correlation between deprivation and walking is strong (Spearman ρ = 0.71, p &lt; 0.001). The correlation between deprivation and cycling is much weaker (ρ = 0.31). And the relationship between cycling infrastructure density and active travel largely disappears once borough-level factors are accounted for.</p>
 
-  <blockquote>"People in the most deprived parts of Greater Manchester walk because they cannot afford to drive or take a bus. That is not active travel equity. That is transport poverty."</blockquote>
+  <blockquote>People in the most deprived parts of Greater Manchester walk because they cannot afford to drive or take public transport. High walking rates in these areas reflect transport poverty, and pointing to them as evidence of good provision misreads the mechanism entirely. These are areas where people walk despite poor conditions.</blockquote>
 
-  <p>The implication for policy is uncomfortable. Pointing to high walking rates in deprived areas as evidence of good provision — or even as a baseline against which to measure active travel uptake — misreads the mechanism entirely. These are areas where people are walking despite poor conditions, not because conditions are good.</p>
+  <p></p>
 
 </div>
 
@@ -135,12 +135,12 @@
     <div class="chart-block">
       <h3>Active travel mode share by deprivation quintile</h3>
       <canvas id="atChart" height="260"></canvas>
-      <p class="chart-caption">% of working residents (Census 2021) using cycling or walking as usual travel method. Q1 = most deprived 20% of LSOAs nationally.</p>
+      <p class="chart-caption">Percentage of working residents using cycling or walking as their usual method of travel to work. Q1 = most deprived 20% of LSOAs nationally.</p>
     </div>
     <div class="chart-block">
       <h3>Walking vs cycling breakdown by quintile</h3>
       <canvas id="wvcChart" height="260"></canvas>
-      <p class="chart-caption">Walking dominates the deprivation gradient. Cycling is comparatively flat across quintiles, undermining any infrastructure-led explanation for the pattern.</p>
+      <p class="chart-caption">Walking dominates the deprivation gradient. Cycling is comparatively flat across quintiles, which undermines any infrastructure-led explanation for the pattern.</p>
     </div>
   </div>
 
@@ -148,7 +148,7 @@
     <div class="chart-block">
       <h3>Cycling infrastructure density by quintile (m/km²)</h3>
       <canvas id="infraChart" height="260"></canvas>
-      <p class="chart-caption">Mean OSM cycling infrastructure metres per km² of LSOA area. Marginal difference across quintiles (Pearson r = 0.09) — infrastructure does not explain the walking gradient.</p>
+      <p class="chart-caption">Mean OSM cycling infrastructure metres per km² of LSOA area. The difference across quintiles is marginal (Pearson r = 0.09). Infrastructure does not explain the walking gradient.</p>
     </div>
     <div class="chart-block">
       <h3>Borough fixed effects vs Bolton baseline</h3>
@@ -212,11 +212,11 @@
   <h2>What this means for transport investment in Greater Manchester</h2>
 
   <ul class="findings">
-    <li><strong>Walking under constraint is not a transport success story.</strong> The deprivation–walking relationship (ρ = 0.71) reflects cost barriers to car ownership and transit use, not high-quality walking conditions or deliberate modal choice.</li>
-    <li><strong>Infrastructure density does not explain the pattern.</strong> Once borough fixed effects are included, cycling infrastructure density loses statistical significance (p = 0.196). The city-centre geography of Manchester and Salford — both deprived and relatively well-supplied — creates a correlation that disappears under proper controls.</li>
-    <li><strong>Borough identity matters as much as deprivation.</strong> Manchester (+2.8pp) and Salford (+3.2pp) have substantially higher active travel at equivalent deprivation levels. Local policies, urban form, and network connectivity drive large residual differences that deprivation alone cannot explain.</li>
-    <li><strong>The highest-value infrastructure targets are where people are already walking.</strong> Areas with high walking rates and poor conditions represent the greatest opportunity for mode shift — from walking to cycling — at lower behaviour-change cost than starting from a car-dependent baseline.</li>
-    <li><strong>Transport appraisal needs an equity weight.</strong> Standard cost-benefit frameworks assess routes on projected trip volumes. In deprived areas, suppressed demand means low trip volumes even on routes where the need is greatest. Without an explicit equity weighting, investment will systematically favour already-mobile areas.</li>
+    <li>The deprivation-walking relationship (ρ = 0.71) reflects cost barriers to car ownership and transit use. High walking rates in deprived areas are a signal of constrained choice, and transport policy should treat them as such.</li>
+    <li>Once borough fixed effects are included, cycling infrastructure density loses statistical significance (p = 0.196). The city-centre geography of Manchester and Salford creates a correlation that disappears under proper controls.</li>
+    <li>Borough identity matters as much as deprivation. Manchester (+2.8pp) and Salford (+3.2pp) have substantially higher active travel at equivalent deprivation levels. Local policies, urban form, and network connectivity drive large residual differences that deprivation alone cannot explain.</li>
+    <li>Areas with high walking rates and poor conditions represent the greatest opportunity for mode shift from walking to cycling, at lower behaviour-change cost than starting from a car-dependent baseline.</li>
+    <li>Standard cost-benefit frameworks assess routes on projected trip volumes. In deprived areas, suppressed demand means low trip volumes even on routes where the need is greatest. Without an explicit equity weighting, investment will systematically favour already-mobile areas.</li>
   </ul>
 </div>
 
