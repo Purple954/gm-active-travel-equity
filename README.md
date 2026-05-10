@@ -1,6 +1,6 @@
 # GM Active Travel Equity
 
-**[View Dashboard](./dashboard.html)**
+**[View Dashboard](https://Purple954.github.io/gm-active-travel-equity/dashboard.html)**
 
 Does cycling and walking infrastructure investment reach the communities that need it most, or does it concentrate in areas that are already well-off? As a resident of Greater Manchester, I wanted to answer that question with data rather than assumption. This project uses open government data - cycling infrastructure locations, neighbourhood deprivation scores, and Census travel behaviour - to examine whether active travel provision across the ten GM boroughs varies systematically with deprivation, and what that means for transport inequality across the region.
 
